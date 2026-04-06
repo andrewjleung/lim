@@ -1,4 +1,5 @@
 mod command;
+mod config;
 mod event;
 mod log;
 mod prelude;
@@ -10,3 +11,4 @@ pub use log::{
 };
 
 pub use command::Lim;
+pub use config::{Config, config};

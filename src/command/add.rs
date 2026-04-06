@@ -1,18 +1,16 @@
 use crate::{
-    Event, Log,
+    Config, Event, Log,
     command::Run,
     event::EventPath,
     log::{self},
     prelude::*,
 };
 use clap::Args;
-use std::{collections::HashMap, env};
+use std::collections::HashMap;
 
 #[derive(Args)]
 pub struct Add {
     path: EventPath,
-
-    #[arg(short, long)]
     message: String,
 
     #[arg(value_parser = parse_attributes)]
@@ -32,23 +30,15 @@ fn parse_attributes(s: &str) -> Result<(EventPath, String)> {
 }
 
 impl Run for Add {
-    fn run(self) -> Result<()> {
+    fn run(self, config: &Config) -> Result<()> {
         let attributes: HashMap<EventPath, String> = self.attributes.into_iter().collect();
         let event = Event::now(self.path, &self.message, attributes);
 
-        // TODO: Make log directory configurable
-        let dir = env::current_dir().context("Could not determine current directory")?;
-        let dir = PathBuf::from_path_buf(dir);
-
-        match dir {
-            Ok(dir) => {
-                let log = log::File::new(&dir, log::Format::default(), log::Grouping::default());
-                log.log(&event)
-            }
-            Err(dir) => Err(anyhow!(
-                "Path is not valid UTF-8: {}",
-                dir.to_string_lossy()
-            )),
-        }
+        let log = log::File::new(
+            &config.log_dir.as_ref().0,
+            log::Format::default(),
+            log::Grouping::default(),
+        );
+        log.log(&event)
     }
 }

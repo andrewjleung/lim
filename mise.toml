@@ -1,0 +1,6 @@
+[tools]
+"rust" = { version = "1.92.0", profile = "default" }
+
+[tasks.install]
+description = "Install the CLI"
+run = "cargo install --path {{config_root}}"
