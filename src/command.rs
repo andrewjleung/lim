@@ -2,7 +2,7 @@ use std::fs;
 
 use crate::{
     Config,
-    command::{add::Add, query::Query},
+    command::{add::Add, query::Query, data_dir::DataDir},
     config,
     prelude::*,
 };
@@ -10,6 +10,7 @@ use clap::{Parser, Subcommand};
 
 mod add;
 mod query;
+mod data_dir;
 
 pub trait Run {
     fn run(self, config: &Config) -> Result<()>;
@@ -29,6 +30,8 @@ enum LimCommand {
 
     #[clap(alias = "q")]
     Query(Query),
+
+    DataDir(DataDir),
 }
 
 impl Lim {
@@ -49,6 +52,7 @@ impl Run for Lim {
         match self.command {
             LimCommand::Add(cmd) => cmd.run(config),
             LimCommand::Query(cmd) => cmd.run(config),
+            LimCommand::DataDir(cmd) => cmd.run(config),
         }
     }
 }
