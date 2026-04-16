@@ -1,0 +1,60 @@
+use crate::{Config, Event, command::Run, prelude::*};
+use clap::Args;
+
+#[derive(Args)]
+pub struct Peek;
+
+impl Run for Peek {
+    fn run(self, config: &Config) -> Result<()> {
+        let log_dir = &config.log_dir.0;
+
+        match peek_most_recent_event(log_dir)? {
+            None => println!("no logs to peek."),
+            Some(event) => {
+                let json = serde_json::to_string(&event)?;
+                println!("{}", json);
+            }
+        }
+
+        Ok(())
+    }
+}
+
+fn peek_most_recent_event(log_dir: &Path) -> Result<Option<Event>> {
+    if !log_dir.exists() {
+        return Ok(None);
+    }
+
+    let mut files: Vec<_> = log_dir
+        .read_dir_utf8()?
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| {
+            entry
+                .path()
+                .extension()
+                .map(|ext| ext == "jsonl")
+                .unwrap_or(false)
+        })
+        .collect();
+
+    files.sort_by(|a, b| b.file_name().cmp(&a.file_name()));
+
+    for entry in files {
+        let file_path = entry.path();
+
+        let contents = std::fs::read_to_string(file_path)
+            .with_context(|| format!("Failed to read {}", file_path))?;
+
+        for line in contents.lines().rev() {
+            let line = line.trim();
+            if line.is_empty() {
+                continue;
+            }
+            let event: Event = serde_json::from_str(line)
+                .with_context(|| format!("Failed to parse event from {}", file_path))?;
+            return Ok(Some(event));
+        }
+    }
+
+    Ok(None)
+}
