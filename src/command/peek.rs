@@ -1,6 +1,7 @@
 use crate::{Config, Event, command::Run, prelude::*};
 use clap::Args;
 
+/// Print the most recent logged event without removing it
 #[derive(Args)]
 pub struct Peek;
 

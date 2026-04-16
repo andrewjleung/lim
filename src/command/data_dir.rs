@@ -1,6 +1,7 @@
 use crate::{Config, command::Run, prelude::*};
 use clap::Args;
 
+/// Print the path to the log data directory
 #[derive(Args)]
 pub struct DataDir;
 

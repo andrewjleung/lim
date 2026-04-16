@@ -1,6 +1,7 @@
 use crate::{Config, command::Run, event::EventPath, prelude::*};
 use clap::Args;
 
+/// Query logged events
 #[derive(Args)]
 pub struct Query {
     // TODO: Query by path

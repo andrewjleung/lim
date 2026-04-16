@@ -8,6 +8,7 @@ use crate::{
 use clap::Args;
 use std::collections::HashMap;
 
+/// Log an event
 #[derive(Args)]
 pub struct Add {
     #[arg(value_hint = clap::ValueHint::Other)]

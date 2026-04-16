@@ -1,6 +1,7 @@
 use crate::{Config, Event, command::Run, prelude::*};
 use clap::Args;
 
+/// Remove and print the most recent logged event
 #[derive(Args)]
 pub struct Pop;
 
