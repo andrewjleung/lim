@@ -23,6 +23,12 @@ mise run install
 # or: cargo install --path .
 ```
 
+### Completions
+```bash
+# After adding new commands, regenerate the shell completion file:
+lim completions zsh > completions/_lim
+```
+
 ## Code Conventions
 
 ### Path Handling

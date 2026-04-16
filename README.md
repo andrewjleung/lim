@@ -28,3 +28,27 @@ lim add "impact.users_first" "shipped a feature making users' lives 78% better"
 lim add "question" "why are things the way that they are?" id=1 category=philosophy
 lim add "answer" "google it." id=1
 ```
+
+## Shell Completions
+
+### zsh
+
+Add the `completions/` directory to your `fpath` before calling `compinit`:
+
+```zsh
+# In ~/.zshrc
+fpath=(/path/to/lim/completions $fpath)
+autoload -Uz compinit && compinit
+```
+
+Or copy the file to your completions directory:
+
+```zsh
+cp completions/_lim ~/.zsh/completions/_lim
+```
+
+To regenerate completions after updating `lim`:
+
+```zsh
+lim completions zsh > completions/_lim
+```

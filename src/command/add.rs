@@ -10,6 +10,7 @@ use std::collections::HashMap;
 
 #[derive(Args)]
 pub struct Add {
+    #[arg(value_hint = clap::ValueHint::Other)]
     path: EventPath,
     message: String,
 

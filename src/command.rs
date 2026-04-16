@@ -2,17 +2,19 @@ use std::fs;
 
 use crate::{
     Config,
-    command::{add::Add, query::Query, data_dir::DataDir, peek::Peek, pop::Pop},
+    command::{add::Add, completions::Completions, data_dir::DataDir, paths::Paths, peek::Peek, pop::Pop, query::Query},
     config,
     prelude::*,
 };
 use clap::{Parser, Subcommand};
 
 mod add;
-mod query;
+mod completions;
 mod data_dir;
+mod paths;
 mod peek;
 mod pop;
+mod query;
 
 pub trait Run {
     fn run(self, config: &Config) -> Result<()>;
@@ -25,7 +27,6 @@ pub struct Lim {
     command: LimCommand,
 }
 
-// TODO: Add commands for fetching config path, data directory path, etc.
 #[derive(Subcommand)]
 enum LimCommand {
     Add(Add),
@@ -34,10 +35,11 @@ enum LimCommand {
     Query(Query),
 
     DataDir(DataDir),
-
     Peek(Peek),
-
     Pop(Pop),
+    #[clap(name = "_paths", hide = true)]
+    Paths(Paths),
+    Completions(Completions),
 }
 
 impl Lim {
@@ -61,6 +63,8 @@ impl Run for Lim {
             LimCommand::DataDir(cmd) => cmd.run(config),
             LimCommand::Peek(cmd) => cmd.run(config),
             LimCommand::Pop(cmd) => cmd.run(config),
+            LimCommand::Paths(cmd) => cmd.run(config),
+            LimCommand::Completions(cmd) => cmd.run(config),
         }
     }
 }
