@@ -4,3 +4,7 @@
 [tasks.install]
 description = "Install the CLI"
 run = "cargo install --path {{config_root}}"
+
+[tasks.completions]
+description = "Regenerate shell completions"
+run = "lim completions zsh > {{config_root}}/completions/_lim"
