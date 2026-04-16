@@ -2,7 +2,7 @@ use std::fs;
 
 use crate::{
     Config,
-    command::{add::Add, completions::Completions, data_dir::DataDir, paths::Paths, peek::Peek, pop::Pop, query::Query},
+    command::{add::Add, completions::Completions, data_dir::DataDir, paths::Paths, peek::Peek, pop::Pop, query::Query, repath::Repath},
     config,
     prelude::*,
 };
@@ -15,6 +15,7 @@ mod paths;
 mod peek;
 mod pop;
 mod query;
+mod repath;
 
 pub trait Run {
     fn run(self, config: &Config) -> Result<()>;
@@ -40,6 +41,7 @@ enum LimCommand {
     #[clap(name = "_paths", hide = true)]
     Paths(Paths),
     Completions(Completions),
+    Repath(Repath),
 }
 
 impl Lim {
@@ -65,6 +67,7 @@ impl Run for Lim {
             LimCommand::Pop(cmd) => cmd.run(config),
             LimCommand::Paths(cmd) => cmd.run(config),
             LimCommand::Completions(cmd) => cmd.run(config),
+            LimCommand::Repath(cmd) => cmd.run(config),
         }
     }
 }
