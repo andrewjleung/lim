@@ -20,13 +20,12 @@ pub struct Add {
 }
 
 fn parse_attributes(s: &str) -> Result<(EventPath, String)> {
-    let mut elements = s.split("=");
+    let mut elements = s.splitn(2, '=');
     let key = elements.next();
     let value = elements.next();
-    let after = elements.next();
 
-    match (key, value, after) {
-        (Some(k), Some(v), None) => Ok((EventPath(k.to_string()), v.to_string())),
+    match (key, value) {
+        (Some(k), Some(v)) => Ok((EventPath(k.to_string()), v.to_string())),
         _ => Err(anyhow!("Received malformed attribute pair: {}", s)),
     }
 }
