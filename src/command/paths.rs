@@ -15,12 +15,7 @@ impl Run for Paths {
 
         let mut paths: HashSet<String> = HashSet::new();
 
-        for entry in log_dir
-            .read_dir_utf8()
-            .with_context(|| format!("Failed to read log directory {}", log_dir))?
-            .filter_map(|e| e.ok())
-            .filter(|e| e.path().extension().map(|ext| ext == "jsonl").unwrap_or(false))
-        {
+        for entry in crate::log::sorted_jsonl_files(log_dir, false)? {
             let file_path = entry.path();
             let contents = std::fs::read_to_string(file_path)
                 .with_context(|| format!("Failed to read {}", file_path))?;

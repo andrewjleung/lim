@@ -25,14 +25,7 @@ impl Run for Query {
             .context("Invalid glob pattern")?
             .compile_matcher();
 
-        let mut files: Vec<_> = log_dir
-            .read_dir_utf8()?
-            .filter_map(|e| e.ok())
-            .filter(|e| e.path().extension().map(|ext| ext == "jsonl").unwrap_or(false))
-            .collect();
-
-        // Sort chronologically (oldest first) — filenames are YYYY_MM so lex order works
-        files.sort_by(|a, b| a.file_name().cmp(b.file_name()));
+        let files = crate::log::sorted_jsonl_files(log_dir, false)?;
 
         for entry in files {
             let file_path = entry.path();

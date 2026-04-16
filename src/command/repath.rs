@@ -19,19 +19,7 @@ impl Run for Repath {
             return Ok(());
         }
 
-        let mut files: Vec<_> = log_dir
-            .read_dir_utf8()?
-            .filter_map(|entry| entry.ok())
-            .filter(|entry| {
-                entry
-                    .path()
-                    .extension()
-                    .map(|ext| ext == "jsonl")
-                    .unwrap_or(false)
-            })
-            .collect();
-
-        files.sort_by(|a, b| b.file_name().cmp(&a.file_name()));
+        let files = crate::log::sorted_jsonl_files(log_dir, true)?;
 
         let mut total_changed = 0;
 
